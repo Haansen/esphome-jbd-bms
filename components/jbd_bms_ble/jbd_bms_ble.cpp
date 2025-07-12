@@ -4,7 +4,7 @@ namespace esphome { namespace jbd_bms_ble {
 
 static const char *const TAG = "jbd_bms_ble";
 
-void JbdBmsBle::dump_config() { ESP_LOGCONFIG(TAG, "JBD BMS BLE:"); LOG_SENSOR("  ", "Total Voltage", this->total_voltage_sensor_); LOG_SENSOR("  ", "Current", this->current_sensor_); LOG_SENSOR("  ", "Remaining Capacity", this->capacity_remaining_sensor_); LOG_SENSOR("  ", "State of Charge", this->state_of_charge_sensor_); LOG_SENSOR("  ", "Power", this->power_sensor_); LOG_SENSOR("  ", "Charging Power", this->charging_power_sensor_); LOG_SENSOR("  ", "Discharging Power", this->discharging_power_sensor_); LOG_SENSOR("  ", "Battery Cycle Capacity", this->battery_cycle_capacity_sensor_); LOG_SENSOR("  ", "Temperature 1", this->temperature_sensors_[0]); }
+void JbdBmsBle::dump_config() { ESP_LOGCONFIG(TAG, "JBD BMS BLE:"); LOG_SENSOR("  ", "Total Voltage", this->total_voltage_sensor_); LOG_SENSOR("  ", "Current", this->current_sensor_); LOG_SENSOR("  ", "Remaining Capacity", this->capacity_remaining_sensor_); LOG_SENSOR("  ", "State of Charge", this->state_of_charge_sensor_); LOG_SENSOR("  ", "Power", this->power_sensor_); LOG_SENSOR("  ", "Charging Power", this->charging_power_sensor_); LOG_SENSOR("  ", "Discharging Power", this->discharging_power_sensor_); }
 
 void JbdBmsBle::handle_notify_data(const std::vector<uint8_t> &data) { if (data.size() < 5) return;
 
@@ -30,14 +30,6 @@ switch (key) {
   case 0xD8:  // Power
     if (this->power_sensor_ != nullptr)
       this->power_sensor_->publish_state(raw / 100.0f);
-    break;
-  case 0xD9:  // Temp
-    if (!this->temperature_sensors_.empty() && this->temperature_sensors_[0] != nullptr)
-      this->temperature_sensors_[0]->publish_state(static_cast<float>(raw) - 100.0f);
-    break;
-  case 0xD5:  // Battery cycle capacity
-    if (this->battery_cycle_capacity_sensor_ != nullptr)
-      this->battery_cycle_capacity_sensor_->publish_state(raw / 1000.0f);
     break;
   case 0xD4:  // Charge today
     if (this->charging_power_sensor_ != nullptr)
