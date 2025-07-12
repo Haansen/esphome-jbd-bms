@@ -6,7 +6,7 @@ static const char *const TAG = "jbd_bms_ble";
 
 void JbdBmsBle::dump_config() { ESP_LOGCONFIG(TAG, "JBD BMS BLE:"); LOG_SENSOR("  ", "Total Voltage", this->total_voltage_sensor_); LOG_SENSOR("  ", "Current", this->current_sensor_); LOG_SENSOR("  ", "Remaining Capacity", this->capacity_remaining_sensor_); LOG_SENSOR("  ", "State of Charge", this->state_of_charge_sensor_); LOG_SENSOR("  ", "Power", this->power_sensor_); LOG_SENSOR("  ", "Charging Power", this->charging_power_sensor_); LOG_SENSOR("  ", "Discharging Power", this->discharging_power_sensor_); }
 
-void JbdBmsBle::handle_notify_data(const std::vector<uint8_t> &data) { if (data.size() < 5) return;
+void JbdBmsBle::handle_notify_data(std::vector<uint8_t> &data) { if (data.size() < 5) return;
 
 for (size_t i = 0; i + 2 < data.size(); i++) { uint8_t key = data[i]; uint16_t raw = (data[i + 1] << 8) | data[i + 2];
 
